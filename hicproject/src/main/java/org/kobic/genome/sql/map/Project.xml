@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.kobic.genome.project.mapper.ProjectMapper">
+
+	<resultMap id="HiCInteractionPairCommonVoMap" type="org.kobic.genome.project.vo.HiCInteractionPairCommonVo">
+		<result property="startPt" column="startPt" />
+		<result property="endPt" column="endPt" />
+		<result property="maxFreq" column="maxFreq" />
+		<result property="binSize" column="binSize" />
+		<result property="windowSize" column="windowSize" />
+	</resultMap>
+	
+	<resultMap id="HiCInteractionPairVoMap" type="org.kobic.genome.project.vo.HiCInteractionPairVo">
+		<result property="bin" column="bin" />
+		<result property="interactionPair" column="interactionPair" />
+		<result property="count" column="count" />
+		<result property="colOrder" column="colOrder" />
+		<result property="rowOrder" column="rowOrder" />
+	</resultMap>
+
+	<select id="getHicIneractionPairCommonInfo" parameterType="java.util.Map" resultMap="HiCInteractionPairCommonVoMap">
+		SELECT
+			MIN(BIN1)										AS startPt
+			, MAX(BIN1) 									AS endPt
+			, MAX(COUNT)									AS maxFreq
+			, ((MAX(BIN1) - MIN(BIN1)) / ${window_size})	AS binSize
+			, ${window_size}								AS windowSize
+		FROM IJ48_chr22
+	</select>
+
+	<select id="getCurrentHicInteractionPairInfo" parameterType="java.util.Map" resultMap="HiCInteractionPairVoMap">
+		SELECT
+			BIN1									AS bin
+			, BIN2 									AS interactionPair
+			, COUNT									AS count
+			, ((BIN1 - MIN(BIN1))/${window_size})	AS colOrder
+			, ((BIN2 - MIN(BIN1))/${window_size})	AS rowOrder
+		FROM IJ48_chr22
+		WHERE BIN1=${pos}
+	</select>
+</mapper>
