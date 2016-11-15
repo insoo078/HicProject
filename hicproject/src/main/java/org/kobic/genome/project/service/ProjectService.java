@@ -1,6 +1,7 @@
 package org.kobic.genome.project.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -22,10 +23,11 @@ public class ProjectService {
 		return this.projectMapper.getHicIneractionPairCommonInfo(paramMap);
 	}
 
-	public HiCInteractionPairVo getCurrentHicInteractionPairInfo( int currentPos, int windowSize ) {
+	public List<HiCInteractionPairVo> getCurrentHicInteractionPairInfo( int currentPos, HiCInteractionPairCommonVo vo ) {
 		Map<String, Integer> paramMap = new HashMap<String, Integer>();
-		paramMap.put("pos", currentPos);
-		paramMap.put("window_size", windowSize);
+		paramMap.put("pos", currentPos );
+		paramMap.put("window_size", vo.getWindowSize());
+		paramMap.put("base", vo.getStartPt());
 		 
 		return this.projectMapper.getCurrentHicInteractionPairInfo(paramMap);
 	}

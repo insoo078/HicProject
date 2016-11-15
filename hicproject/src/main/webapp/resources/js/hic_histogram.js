@@ -6,31 +6,6 @@ var HicHistogram = function( config ) {
     .attr("id", "canvas")
     .attr("width", 1800)
     .attr("width", 640);
-
-    
-    var data = [{score:0, frequency:100}, {score:1, frequency:80}];
-    
-    
-    var HEIGHT = 640;
-    var WIDTH = 1800;
-    var PADDING = 5;
-
-    var dataset = [];
-	for(var i=0; i<data.length; i++) {
-		dataset.push( [data[i].score, data[i].frequency] );
-	}
-    
-	var yScale = d3.scale.linear()
-	.domain( [d3.min(dataset, (d)=> d[1]), d3.max(dataset, (d)=> d[1])] )
-	.range([HEIGHT - (PADDING), PADDING]);
-
-	var xScale = d3.scale.linear()
-	.domain( [d3.min(dataset, (d)=> d[0]), d3.max(dataset, (d)=> d[0])] )
-	.range([PADDING, (WIDTH-PADDING)]);
-	
-	
-	
-	console.log( yScale );
 };
 
 
@@ -38,9 +13,42 @@ $(document).ready(function () {
 	$("#btn_run").click(function(){
 		$.ajax({
 			type: 'post',
-			url: 'project/get_data.jsp',
+			url: 'get_data',
 			dataType: 'json',
 			success:function(data) {
+			    var HEIGHT = 640;
+			    var WIDTH = 1800;
+			    var PADDING = 5;
+
+				var yScale = d3.scale.linear()
+				.domain( [0, data.maxFreq] )
+				.range([HEIGHT - (PADDING), PADDING]);
+
+				var xScale = d3.scale.linear()
+				.domain( [data.startPt, data.endPt] )
+				.range([PADDING, (WIDTH-PADDING)]);
+				
+				var yAxis = d3.svg.axis()
+				.orient('left')
+				.scale(yScale)
+				;
+		
+				var xAxis = d3.svg.axis()
+				.orient('bottom')
+				.scale(xScale)
+				;
+				
+				var canvas = d3.select("#canvas");
+
+				canvas.append('g')
+				.attr('class', 'axis')
+				.attr('transform', 'translate(' + (PADDING) + ', 0)')
+				.call(yAxis);
+		
+				canvas.append('g')
+				.attr('class', 'axis')
+				.attr("transform", "translate(0, " + (HEIGHT-PADDING) + ")")
+				.call(xAxis);
 			}
 		});
 	});

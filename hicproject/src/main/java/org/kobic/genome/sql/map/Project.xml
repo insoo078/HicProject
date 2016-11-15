@@ -34,9 +34,10 @@
 			BIN1									AS bin
 			, BIN2 									AS interactionPair
 			, COUNT									AS count
-			, ((BIN1 - MIN(BIN1))/${window_size})	AS colOrder
-			, ((BIN2 - MIN(BIN1))/${window_size})	AS rowOrder
+			, ((BIN1 - ${base})/${window_size})	AS colOrder
+			, ((BIN2 - ${base})/${window_size})	AS rowOrder
 		FROM IJ48_chr22
 		WHERE BIN1=${pos}
+		ORDER BY BIN2
 	</select>
 </mapper>

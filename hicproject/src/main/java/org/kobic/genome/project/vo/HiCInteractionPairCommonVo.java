@@ -1,16 +1,18 @@
 package org.kobic.genome.project.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class HiCInteractionPairCommonVo  implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 
 	private int startPt;
-	private int entPt;
-	private int maxFreq;
+	private int endPt;
+	private float maxFreq;
 	private int binSize;
-	private int widnowSize;
+	private int windowSize;
+	private List<HiCInteractionPairVo> pariList;
 
 	public int getStartPt() {
 		return startPt;
@@ -18,16 +20,16 @@ public class HiCInteractionPairCommonVo  implements Serializable{
 	public void setStartPt(int startPt) {
 		this.startPt = startPt;
 	}
-	public int getEntPt() {
-		return entPt;
+	public int getEndPt() {
+		return endPt;
 	}
-	public void setEntPt(int entPt) {
-		this.entPt = entPt;
+	public void setEndPt(int endPt) {
+		this.endPt = endPt;
 	}
-	public int getMaxFreq() {
+	public float getMaxFreq() {
 		return maxFreq;
 	}
-	public void setMaxFreq(int maxFreq) {
+	public void setMaxFreq(float maxFreq) {
 		this.maxFreq = maxFreq;
 	}
 	public int getBinSize() {
@@ -36,10 +38,16 @@ public class HiCInteractionPairCommonVo  implements Serializable{
 	public void setBinSize(int binSize) {
 		this.binSize = binSize;
 	}
-	public int getWidnowSize() {
-		return widnowSize;
+	public int getWindowSize() {
+		return windowSize;
 	}
-	public void setWidnowSize(int widnowSize) {
-		this.widnowSize = widnowSize;
+	public void setWindowSize(int windowSize) {
+		this.windowSize = windowSize;
+	}
+	public List<HiCInteractionPairVo> getPariList() {
+		return pariList;
+	}
+	public void setPariList(List<HiCInteractionPairVo> pariList) {
+		this.pariList = pariList;
 	}
 }

@@ -8,7 +8,7 @@ public class HiCInteractionPairVo implements Serializable{
 
 	private int bin;
 	private int interactionPair;
-	private int count;
+	private float count;
 	private int colOrder;
 	private int rowOrder;
 
@@ -24,10 +24,10 @@ public class HiCInteractionPairVo implements Serializable{
 	public void setInteractionPair(int interactionPair) {
 		this.interactionPair = interactionPair;
 	}
-	public int getCount() {
+	public float getCount() {
 		return count;
 	}
-	public void setCount(int count) {
+	public void setCount(float count) {
 		this.count = count;
 	}
 	public int getColOrder() {
