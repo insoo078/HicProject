@@ -4,3 +4,9 @@
   stroke: #666;
   stroke-width: 1px;
 }
+
+.line{
+	fill: none;
+  stroke: #d3f;
+  stroke-width: 1px;
+}
