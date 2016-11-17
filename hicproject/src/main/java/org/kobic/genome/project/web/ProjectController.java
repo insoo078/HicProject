@@ -24,7 +24,7 @@ public class ProjectController {
 
 		HiCInteractionPairCommonVo vo = this.projectService.getHicIneractionPairCommonInfo( 1000 );
 
-		vo.setPariList( this.projectService.getCurrentHicInteractionPairInfo( 16262500, vo ) );
+		vo.setPairList( this.projectService.getCurrentHicInteractionPairInfo( 16262500, vo ) );
 
 		return gson.toJson( vo );
 	}	

@@ -4,6 +4,7 @@
 
 <jsp:include page="./common/header.jsp" flush="false"/>
 
+<link rel="stylesheet" type="text/css" href="resources/css/graph.css" />
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script> 
@@ -18,7 +19,7 @@
 <P>  The time on the server is ${serverTime}. </P>
 <p><button id='btn_run'>Button</button>
 
-<div id='graph' style='width:800px;height:600px;background:green;'>
+<div id='graph' style='width:1280px;height:640px;background:none;float:left;border:1px solid gray;'>
 
 </div>
 

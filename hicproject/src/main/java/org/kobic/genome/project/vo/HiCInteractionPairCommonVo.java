@@ -12,7 +12,7 @@ public class HiCInteractionPairCommonVo  implements Serializable{
 	private float maxFreq;
 	private int binSize;
 	private int windowSize;
-	private List<HiCInteractionPairVo> pariList;
+	private List<HiCInteractionPairVo> pairList;
 
 	public int getStartPt() {
 		return startPt;
@@ -44,10 +44,10 @@ public class HiCInteractionPairCommonVo  implements Serializable{
 	public void setWindowSize(int windowSize) {
 		this.windowSize = windowSize;
 	}
-	public List<HiCInteractionPairVo> getPariList() {
-		return pariList;
+	public List<HiCInteractionPairVo> getPairList() {
+		return pairList;
 	}
-	public void setPariList(List<HiCInteractionPairVo> pariList) {
-		this.pariList = pariList;
+	public void setPairList(List<HiCInteractionPairVo> pariList) {
+		this.pairList = pariList;
 	}
 }
