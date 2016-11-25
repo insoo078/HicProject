@@ -46,6 +46,8 @@ HicHistogram.prototype.checkParam = function( param ) {
 };
 
 HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
+	var obj = this;
+
 	$.ajax({
 		type: 'post',
 		url: 'get_gene_symbols',
@@ -54,9 +56,35 @@ HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
 		success:function(data) {
 			var content = $("#gene_list_dialog .dialog-content");
 			for(var i in data ) {
-				content.append("<div>" + param + " " + data[i].chrom + ":" + data[i].txStart + "-" + data[i].txEnd + "</div>");
+				content.append("<div class='gene-symbol-list'>" + param + " " + data[i].chrom + ":" + data[i].txStart + "-" + data[i].txEnd + "</div>");
 			}
-//			$("#gene_list_dialog .dialog-content").text( data );
+			
+			$(".gene-symbol-list").click(function(){
+				var item = $(this).text();
+				var breakedItems = item.split(" ")[1].split(":");
+				var chr = breakedItems[0];
+				var pos = breakedItems[1].split("-")[0];
+
+				$("#gene_list_dialog").hide();
+				
+				var boundary_range = $("#boundary_range").val();
+				var window_size = $("#window_size").val();
+				var loci = chr + ":" + pos;
+				
+				obj.findInteractionsAboutBait( loci, boundary_range, window_size );
+			});
+		}
+	});
+}
+
+HicHistogram.prototype.findInteractionsAboutBait = function( loci, boundary_range, window_size ) {
+	$.ajax({
+		type: 'post',
+		url: 'get_data',
+		data: {loci:loci, boundary_range:boundary_range, window_size:window_size},
+		dataType: 'json',
+		success:function(data) {
+			console.log(data);
 		}
 	});
 }

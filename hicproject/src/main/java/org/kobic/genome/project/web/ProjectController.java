@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.kobic.genome.project.service.ProjectService;
-import org.kobic.genome.project.vo.HiCInteractionPairCommonVo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,14 +19,16 @@ public class ProjectController {
 
 	@RequestMapping(value = "get_data", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
 	@ResponseBody
-	public String get_data() {
+	public String get_data(HttpServletRequest request) {
 		Gson gson = new Gson();
 
-		HiCInteractionPairCommonVo vo = this.projectService.getHicIneractionPairCommonInfo( 1000 );
-
-		vo.setPairList( this.projectService.getCurrentHicInteractionPairInfo( 16262500, vo ) );
-
-		return gson.toJson( vo );
+		String loci = request.getParameter("loci");
+		String windowSize = request.getParameter("window_size");
+		String boundaryRange = request.getParameter("boundary_range");
+		
+		System.out.println( loci + " " + windowSize + " " + boundaryRange );
+		
+		return gson.toJson( this.projectService.getInteractions( loci, windowSize, boundaryRange ) );
 	}
 	
 	@RequestMapping(value = "get_gene_symbols", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")

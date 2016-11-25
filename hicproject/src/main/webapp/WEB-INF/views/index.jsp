@@ -18,10 +18,22 @@
 <%-- 
 <P>  The time on the server is ${serverTime}. </P> --%>
 
+<form id='transferForm' action=''>
+	<input type='text' id='chrom' name='chrom'/>
+	<input type='text' id='pos' name='pos'/>
+</form>
+
 <div id="controller">
 	<div style="background:none;height:30px;line-height:30px;">
 		Input a gene Symbol or Loci <input type='text' id='input' class='input' value='BRCA1'/> (Ex. BRCA1, chr1:566000)
-		Boundary range <select id='boundary_range'>
+		Binning size (Window)
+		<select id='window_size'>
+			<option value='1000' selected>1Kb</option>
+			<option value='3000'>3Kb</option>
+			<option value='5000'>4Kb</option>
+		</select>
+		Interaction boundary range 
+		<select id='boundary_range'>
 			<option value='500000'>500Kb</option>
 			<option value='1000000' selected>1Mb</option>
 			<option value='10000000'>10Mb</option>

@@ -57,10 +57,15 @@ public class ProjectService {
 		return this.projectMapper.getLocusInfo(paramMap);
 	}
 	
-	public List<InteractionVo> getInteractions( String param ) {
+	public List<InteractionVo> getInteractions( String loci, String windowSize, String boundaryRange ) {
 		Map<String, String> paramMap = new HashMap<String, String>();
-		String[] params = param.split(":");
+		String[] params = loci.split(":");
 
-		return null;
+		paramMap.put("chrom", params[0]);
+		paramMap.put("pos", params[1]);
+		paramMap.put("windowSize", windowSize);
+		paramMap.put("boundary", boundaryRange);
+
+		return this.projectMapper.getInteractions(paramMap);
 	}
 }

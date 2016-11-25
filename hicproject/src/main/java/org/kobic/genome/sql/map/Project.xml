@@ -122,7 +122,7 @@
 				, count
 				, 'normal' type
 			FROM Sample
-			WHERE chr=#{chrom} AND bin1=${pos}
+			WHERE chr=#{chrom} AND ${pos} BETWEEN bin1 AND bin1 + ${windowSize}
 			UNION ALL
 			SELECT
 				chr
@@ -131,7 +131,7 @@
 				, count
 				, 'triangular' type
 			FROM Sample
-			WHERE chr=#{chrom} AND bin2=${pos}
+			WHERE chr=#{chrom} AND ${pos} BETWEEN bin2 AND BIN2 + ${windowSize}
 		) a
 		WHERE bin2 BETWEEN bin1 - ${boundary} AND bin1 + ${boundary}
 	</select>
