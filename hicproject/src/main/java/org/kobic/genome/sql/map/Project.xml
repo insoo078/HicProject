@@ -25,7 +25,7 @@
 		<result property="txEnd" column="txEnd" />
 	</resultMap>
 
-	<resultMap id="InteractionVoMap" type="org.kobic.genome.project.vo.HiCInteractionPairVo">
+	<resultMap id="InteractionVoMap" type="org.kobic.genome.project.vo.InteractionVo">
 		<result property="chr" column="chr" />
 		<result property="bin1" column="bin1" />
 		<result property="bin2" column="bin2" />

@@ -38,7 +38,7 @@ HicHistogram.prototype.init = function( ) {
 
 HicHistogram.prototype.checkParam = function( param ) {
 	if( param.startsWith('chr') && param.indexOf(":") ) {
-		obj.findInteractionPairs( param );
+		this.findInteractionPairs( param );
 	}else {
 		// gene symbol
 		this.checkHowManyGenesAreThere( param );
