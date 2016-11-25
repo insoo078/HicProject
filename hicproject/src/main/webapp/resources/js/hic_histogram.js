@@ -38,11 +38,25 @@ HicHistogram.prototype.init = function( ) {
 
 HicHistogram.prototype.checkParam = function( param ) {
 	if( param.startsWith('chr') && param.indexOf(":") ) {
-		console.log("Alright it is loci");
+		obj.findInteractionPairs( param );
 	}else {
 		// gene symbol
 		this.checkHowManyGenesAreThere( param );
 	}
+};
+
+HicHistogram.prototype.findInteractionPairs = function( param ) {
+	var data = param.split(":");
+	var chr = data[0];
+	var pos = data[1].split("-")[0];
+
+	$("#gene_list_dialog").hide();
+	
+	var boundary_range = $("#boundary_range").val();
+	var window_size = $("#window_size").val();
+	var loci = chr + ":" + pos;
+	
+	this.findInteractionsAboutBait( loci, boundary_range, window_size );
 };
 
 HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
@@ -61,17 +75,9 @@ HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
 			
 			$(".gene-symbol-list").click(function(){
 				var item = $(this).text();
-				var breakedItems = item.split(" ")[1].split(":");
-				var chr = breakedItems[0];
-				var pos = breakedItems[1].split("-")[0];
-
-				$("#gene_list_dialog").hide();
+				var breakedItems = item.split(" ")[1];
 				
-				var boundary_range = $("#boundary_range").val();
-				var window_size = $("#window_size").val();
-				var loci = chr + ":" + pos;
-				
-				obj.findInteractionsAboutBait( loci, boundary_range, window_size );
+				obj.findInteractionPairs( breakedItems );
 			});
 		}
 	});
