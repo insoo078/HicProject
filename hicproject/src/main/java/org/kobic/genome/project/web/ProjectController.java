@@ -1,6 +1,7 @@
 package org.kobic.genome.project.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.kobic.genome.project.service.ProjectService;
 import org.kobic.genome.project.vo.HiCInteractionPairCommonVo;
@@ -27,5 +28,15 @@ public class ProjectController {
 		vo.setPairList( this.projectService.getCurrentHicInteractionPairInfo( 16262500, vo ) );
 
 		return gson.toJson( vo );
-	}	
+	}
+	
+	@RequestMapping(value = "get_gene_symbols", method = RequestMethod.POST, produces = "text/plain;charset=UTF-8")
+	@ResponseBody
+	public String getGeneSymbolData(HttpServletRequest request) {
+		Gson gson = new Gson();
+		
+		String param = request.getParameter("symbol");
+
+		return gson.toJson( this.projectService.getLocis(param) );
+	}
 }

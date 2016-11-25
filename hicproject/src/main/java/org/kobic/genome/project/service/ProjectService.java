@@ -1,6 +1,5 @@
 package org.kobic.genome.project.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,8 @@ import javax.annotation.Resource;
 import org.kobic.genome.project.mapper.ProjectMapper;
 import org.kobic.genome.project.vo.HiCInteractionPairCommonVo;
 import org.kobic.genome.project.vo.HiCInteractionPairVo;
-import org.kobic.genome.project.vo.PairVo;
+import org.kobic.genome.project.vo.InteractionVo;
+import org.kobic.genome.project.vo.LocusVo;
 import org.springframework.stereotype.Service;
 
 @Service(value = "projectService")
@@ -33,7 +33,7 @@ public class ProjectService {
 		paramMap.put("base", vo.getStartPt());
 		 
 		List<HiCInteractionPairVo> list = this.projectMapper.getCurrentHicInteractionPairInfo(paramMap);
-		
+
 		return list;
 
 //		Map<Integer,Float> map = new HashMap<Integer,Float>();
@@ -48,5 +48,19 @@ public class ProjectService {
 //			pairList.add( pairVo );
 //		}
 //		return pairList;
+	}
+	
+	public List<LocusVo> getLocis( String param ) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("name", param);
+
+		return this.projectMapper.getLocusInfo(paramMap);
+	}
+	
+	public List<InteractionVo> getInteractions( String param ) {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		String[] params = param.split(":");
+
+		return null;
 	}
 }

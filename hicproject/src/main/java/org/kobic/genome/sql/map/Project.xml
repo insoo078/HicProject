@@ -19,6 +19,19 @@
 		<result property="rowOrder" column="rowOrder" />
 	</resultMap>
 
+	<resultMap id="LocusVoMap" type="org.kobic.genome.project.vo.LocusVo">
+		<result property="chrom" column="chrom" />
+		<result property="txStart" column="txStart" />
+		<result property="txEnd" column="txEnd" />
+	</resultMap>
+
+	<resultMap id="InteractionVoMap" type="org.kobic.genome.project.vo.HiCInteractionPairVo">
+		<result property="chr" column="chr" />
+		<result property="bin1" column="bin1" />
+		<result property="bin2" column="bin2" />
+		<result property="count" column="count" />
+	</resultMap>
+
 	<select id="getHicIneractionPairCommonInfo" parameterType="java.util.Map" resultMap="HiCInteractionPairCommonVoMap">
 		SELECT
 			MIN(BIN1)										AS startPt
@@ -27,6 +40,7 @@
 			, ((MAX(BIN1) - MIN(BIN1)) / ${window_size})	AS binSize
 			, ${window_size}								AS windowSize
 		FROM IJ48_chr22
+		WHERE 
 	</select>
 
 	<select id="getCurrentHicInteractionPairInfo" parameterType="java.util.Map" resultMap="HiCInteractionPairVoMap">
@@ -39,5 +53,86 @@
 		FROM IJ48_chr22
 		WHERE BIN1=${pos}
 		ORDER BY BIN2
+	</select>
+	
+	<select id="getLocusInfo" parameterType="java.util.Map" resultMap="LocusVoMap">
+		SELECT
+			chrom
+			, txStart
+			, txEnd
+		FROM GENE_Refseq_hg19
+		WHERE name=#{name}
+		
+		UNION ALL
+
+		SELECT
+			chrom
+			, txStart
+			, txEnd
+		FROM GENE_Refseq_hg19
+		WHERE name2=#{name}
+		
+		UNION ALL
+		
+		SELECT 
+			chrom
+			, txStart
+			, txEnd
+		FROM GENE_UCSC_hg19
+		WHERE name=#{name}
+		
+		UNION ALL
+		
+		SELECT 
+			chrom
+			, txStart
+			, txEnd
+		FROM GENE_Ensembl_hg19
+		WHERE name=#{name}
+
+		UNION ALL
+
+		SELECT 
+			chrom
+			, txStart
+			, txEnd
+		FROM GENE_Ensembl_hg19
+		WHERE name2=#{name}
+	</select>
+	
+	<select id="getInteractions" parameterType="java.util.Map" resultMap="InteractionVoMap">
+		SELECT
+			chr
+			, CASE WHEN type='normal' THEN 
+				bin1
+			ELSE 
+				bin2 
+			END										bin1
+			, CASE WHEN type='normal' THEN
+				bin2
+			ELSE 
+				bin1 
+			END 									bin2
+			, count
+		FROM (
+			SELECT
+				chr
+				, bin1
+				, bin2
+				, count
+				, 'normal' type
+			FROM Sample
+			WHERE chr=#{chrom} AND bin1=${pos}
+			UNION ALL
+			SELECT
+				chr
+				, bin1
+				, bin2
+				, count
+				, 'triangular' type
+			FROM Sample
+			WHERE chr=#{chrom} AND bin2=${pos}
+		) a
+		WHERE bin2 BETWEEN bin1 - ${boundary} AND bin1 + ${boundary}
 	</select>
 </mapper>
