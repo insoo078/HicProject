@@ -25,9 +25,7 @@ public class ProjectController {
 		String loci = request.getParameter("loci");
 		String windowSize = request.getParameter("window_size");
 		String boundaryRange = request.getParameter("boundary_range");
-		
-		System.out.println( loci + " " + windowSize + " " + boundaryRange );
-		
+
 		return gson.toJson( this.projectService.getInteractions( loci, windowSize, boundaryRange ) );
 	}
 	

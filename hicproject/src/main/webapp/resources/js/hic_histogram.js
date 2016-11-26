@@ -19,7 +19,7 @@ HicHistogram.prototype.init = function( ) {
 	});
 	$("#input").blur(function(){
 		if( $(this).val() === '' ) {
-			$(this).val('BRCA1');
+			$(this).val('chr1:566000');
 		};
 	});
 	
@@ -84,12 +84,56 @@ HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
 }
 
 HicHistogram.prototype.findInteractionsAboutBait = function( loci, boundary_range, window_size ) {
+    var HEIGHT = $("#canvas").height();
+    var WIDTH = $("#canvas").width();
+    var PADDING = 100;
+	
 	$.ajax({
 		type: 'post',
 		url: 'get_data',
 		data: {loci:loci, boundary_range:boundary_range, window_size:window_size},
 		dataType: 'json',
 		success:function(data) {
+			var yScale = d3.scale.linear()
+			.domain( [0, data.peakValue] )
+			.range([HEIGHT - (PADDING), PADDING]);
+
+			var xScale = d3.scale.linear()
+			.domain( [data.startPt, data.endPt] )
+			.range([PADDING, (WIDTH-PADDING)]);
+			
+			var yAxis = d3.svg.axis()
+			.orient('left')
+			.scale(yScale)
+			;
+
+			var xAxis = d3.svg.axis()
+			.orient('bottom')
+			.scale(xScale)
+			;
+	
+			var canvas = d3.select("#canvas");
+	
+			canvas.append('g')
+			.attr('class', 'axis')
+			.attr('transform', 'translate(' + (PADDING) + ', 0)')
+			.call(yAxis);
+	
+			canvas.append('g')
+			.attr('class', 'axis')
+			.attr("transform", "translate(0, " + (HEIGHT-PADDING) + ")")
+			.call(xAxis);
+			
+			
+			var line = d3.svg.line()
+		    .x(function(d) { return xScale(d.bin2); })
+		    .y(function(d) { return yScale(d.count); });
+	
+			canvas.append("line")
+		      .data([data.interactionPairs])
+		      .attr("class", "line")
+			.attr("d", line);
+			
 			console.log(data);
 		}
 	});

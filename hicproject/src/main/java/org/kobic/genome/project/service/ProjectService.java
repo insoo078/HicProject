@@ -57,7 +57,7 @@ public class ProjectService {
 		return this.projectMapper.getLocusInfo(paramMap);
 	}
 	
-	public List<InteractionVo> getInteractions( String loci, String windowSize, String boundaryRange ) {
+	public Map<String, Object> getInteractions( String loci, String windowSize, String boundaryRange ) {
 		Map<String, String> paramMap = new HashMap<String, String>();
 		String[] params = loci.split(":");
 
@@ -65,7 +65,34 @@ public class ProjectService {
 		paramMap.put("pos", params[1]);
 		paramMap.put("windowSize", windowSize);
 		paramMap.put("boundary", boundaryRange);
+		
+		int startPt = Integer.valueOf(params[1]) - Integer.valueOf(boundaryRange);
+		int endPt = Integer.valueOf(params[1]) + Integer.valueOf(boundaryRange);
+		
+		if( startPt < 1 ) startPt = 1;
 
-		return this.projectMapper.getInteractions(paramMap);
+		List<InteractionVo> interactionPairList = this.projectMapper.getInteractions(paramMap);
+		
+		Map<String, Object> retMap = new HashMap<String, Object>();
+		retMap.put("bait", params[1]);
+		retMap.put("startPt", startPt);
+		retMap.put("endPt", endPt);
+		retMap.put("windowSize", windowSize);
+		retMap.put("boundaryRange", boundaryRange);
+		retMap.put("interactionPairs", interactionPairList);
+		retMap.put("peakValue", this.getPeakValue(interactionPairList) );
+		
+		return retMap;
+	}
+	
+	private double getPeakValue( List<InteractionVo> lst ) {
+		if( lst != null && lst.size() > 0 ) {
+			double max = lst.get(0).getCount(); 
+			for( int i=1; i<lst.size(); i++) {
+				if( max < lst.get(i).getCount() ) max = lst.get(i).getCount();
+			}
+			return max;
+		}
+		return 0;
 	}
 }

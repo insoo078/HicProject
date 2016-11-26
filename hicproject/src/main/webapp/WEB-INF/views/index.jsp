@@ -25,7 +25,7 @@
 
 <div id="controller">
 	<div style="background:none;height:30px;line-height:30px;">
-		Input a gene Symbol or Loci <input type='text' id='input' class='input' value='BRCA1'/> (Ex. BRCA1, chr1:566000)
+		Input a gene Symbol or Loci <input type='text' id='input' class='input' value='chr1:566000'/> (Ex. BRCA1, chr1:566000)
 		Binning size (Window)
 		<select id='window_size'>
 			<option value='1000' selected>1Kb</option>
