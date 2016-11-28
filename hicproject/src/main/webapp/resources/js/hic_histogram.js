@@ -58,7 +58,7 @@ HicHistogram.prototype.draw = function( data ) {
 		return yScale(d.count);
 	})
 	.attr('r', 1);
-	
+
 	canvas.append('g')
 	.attr('id', 'bar-data')
 	.selectAll('line')
@@ -103,6 +103,13 @@ HicHistogram.prototype.draw = function( data ) {
 
 		$("#threshold-bar").attr('y1', value);
 		$("#threshold-bar").attr('y2', value);
+
+		var lines = d3.selectAll(".bar").each(function(d,i) {
+			if( yScale($(this).attr('y1')) >= yScale(value) )
+				$(this).attr('class', 'bar hit');
+			else
+				$(this).attr('class', 'bar');
+		});
 	});
 
 //	canvas.on("click", function() {
@@ -123,6 +130,13 @@ HicHistogram.prototype.draw = function( data ) {
 
 		$("#threshold-bar").attr('y1', value);
 		$("#threshold-bar").attr('y2', value);
+
+		var lines = d3.selectAll(".bar").each(function(d,i) {
+			if( yScale($(this).attr('y1')) >= yScale(value) )
+				$(this).attr('class', 'bar hit');
+			else
+				$(this).attr('class', 'bar');
+		});
 	});
 	
 	canvas.append('g')
