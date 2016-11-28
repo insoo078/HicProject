@@ -57,36 +57,15 @@ HicHistogram.prototype.draw = function( data ) {
 	})
 	.attr('r', 2);
 	
-//	var yAxis = d3.svg.axis()
-//	.orient('left')
-//	.scale(yScale)
-//	;
-//
-//	var xAxis = d3.svg.axis()
-//	.orient('bottom')
-//	.scale(xScale)
-//	;
-//
-//	canvas.append('g')
-//	.attr('class', 'axis')
-//	.attr('transform', 'translate(' + (PADDING) + ', 0)')
-//	.call(yAxis);
-//
-//	canvas.append('g')
-//	.attr('class', 'axis')
-//	.attr("transform", "translate(0, " + (HEIGHT-PADDING) + ")")
-//	.call(xAxis);
-//	
-//	var line = d3.svg.line()
-//    .x(function(d) { return xScale(d.bin2); })
-//    .y(function(d) { return yScale(d.count); });
-//
-//	canvas.append("line")
-//      .data([data.interactionPairs])
-//      .attr("class", "line")
-//	.attr("d", line);
-	
-	console.log(data);
+	var units = canvas.append('g');
+	for(var i=0; i<=data.peakValue; i++) {
+		units.append('line')
+		.attr('class', 'unit')
+		.attr('x1', PADDING - 15)
+		.attr('y1', yScale(i))
+		.attr('x2', PADDING)
+		.attr('y2', yScale(i));
+	}
 }
 
 
