@@ -45,6 +45,7 @@ HicHistogram.prototype.draw = function( data ) {
 	;
 
 	canvas.append('g')
+	.attr('id', 'circle-data')
 	.selectAll('circle')
 	.data(data.interactionPairs)
 	.enter()
@@ -55,7 +56,27 @@ HicHistogram.prototype.draw = function( data ) {
 	.attr('cy', function(d, i){
 		return yScale(d.count);
 	})
-	.attr('r', 2);
+	.attr('r', 1);
+	
+	canvas.append('g')
+	.attr('id', 'bar-data')
+	.selectAll('line')
+	.data(data.interactionPairs)
+	.enter()
+	.append('line')
+	.attr('class', 'bar')
+	.attr('x1', function(d, i) {
+		return xScale(d.bin2);
+	})
+	.attr('y1', function(d, i){
+		return yScale(d.count);
+	})
+	.attr('x2', function(d, i) {
+		return xScale(d.bin2);
+	})
+	.attr('y2', function(d, i){
+		return yScale(0);
+	});
 	
 	var units = canvas.append('g');
 	for(var i=0; i<=data.peakValue; i++) {
@@ -77,7 +98,7 @@ HicHistogram.prototype.init = function( ) {
 	});
 	$("#input").blur(function(){
 		if( $(this).val() === '' ) {
-			$(this).val('chr1:566000');
+			$(this).val('chr1:16943000');
 		};
 	});
 	
