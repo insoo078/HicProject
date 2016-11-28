@@ -1,20 +1,14 @@
 var HicHistogram = function( config ) {
 	this.threshold = 0;
     this.config = JSON.parse( JSON.stringify(config) );
-
-    var div = $("#graph");
-
-    var graph = d3.select("#graph")
-    .append("svg")
-    .attr("id", "canvas")
-    .attr("viewBox","0 0 " + div.width() +" " + div.height() )
-    ;
 };
+
+
 
 HicHistogram.prototype.draw = function( data ) {
     var HEIGHT = $("#canvas").height();
     var WIDTH = $("#canvas").width();
-    var PADDING = 100;
+    var PADDING = 50;
 
 	var yScale = d3.scale.linear()
 	.domain( [0, data.peakValue] )
@@ -131,14 +125,27 @@ HicHistogram.prototype.draw = function( data ) {
 		$("#threshold-bar").attr('y1', value);
 		$("#threshold-bar").attr('y2', value);
 
+		var highPossibleContactPairList = $("#hit_list .hit_list_content");
+		highPossibleContactPairList.empty();
+
+		var idx = 0;
 		var lines = d3.selectAll(".bar").each(function(d,i) {
-			if( yScale($(this).attr('y1')) >= yScale(value) )
+			if( yScale($(this).attr('y1')) >= yScale(value) ) {
+				idx++;
 				$(this).attr('class', 'bar hit');
-			else
+				
+				var endPt = parseInt(d.bin2)+parseInt(data.windowSize);
+				
+				var str = "<div style='width:10%;height:25px;line-height:25px;float:left;text-align:center;'>" + idx + "</div>";
+				str += "<div style='width:30%;height:25px;line-height:25px;float:left;text-align:center;'>" + d.bin1 + "</div>";
+				str += "<div style='width:50%;height:25px;line-height:25px;float:left;text-align:center;'>" + d.chr + ":" + d.bin2 + "-" + endPt + "</div>";
+				str += "<div style='width:10%;height:25px;line-height:25px;float:left;text-align:center;'>" + d.count + "</div>";
+				highPossibleContactPairList.append( str );
+			}else
 				$(this).attr('class', 'bar');
 		});
 	});
-	
+
 	canvas.append('g')
 	.attr('id', 'threashold-bar-group')
 	.append('line')
@@ -173,8 +180,18 @@ HicHistogram.prototype.init = function( ) {
 			$('#input').focus();
 			return;
 		}
-		var boundary = $("#boundary_range").val();
 		
+		$("#canvas").remove();
+
+	    var div = $("#graph");
+	    var graph = d3.select("#graph")
+	    .append("svg")
+	    .attr("id", "canvas")
+	    .attr("viewBox","0 0 " + div.width() +" " + div.height() )
+	    ;
+
+		var boundary = $("#boundary_range").val();
+
 		obj.checkParam( param );
 	});
 };
@@ -204,7 +221,6 @@ HicHistogram.prototype.findInteractionPairs = function( param ) {
 
 HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
 	var obj = this;
-
 	$.ajax({
 		type: 'post',
 		url: 'get_gene_symbols',
@@ -216,11 +232,25 @@ HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
 				content.append("<div class='gene-symbol-list'>" + param + " " + data[i].chrom + ":" + data[i].txStart + "-" + data[i].txEnd + "</div>");
 			}
 			
+			var geneDialog = $("#gene_list_dialog").dialog({
+				resizable: false,
+				height: "auto",
+				width: 480,
+				modal: true,
+				buttons:{
+					"Close":function() {
+						$(this).dialog('close');
+					}
+				}
+			});
+			
 			$(".gene-symbol-list").click(function(){
 				var item = $(this).text();
 				var breakedItems = item.split(" ")[1];
 				
 				obj.findInteractionPairs( breakedItems );
+				
+				geneDialog.dialog('close');
 			});
 		}
 	});
@@ -235,10 +265,7 @@ HicHistogram.prototype.findInteractionsAboutBait = function( loci, boundary_rang
 		data: {loci:loci, boundary_range:boundary_range, window_size:window_size},
 		dataType: 'json',
 		success:function(data) {
-			
 			obj.draw(data);
-
-			console.log(data);
 		}
 	});
 }
