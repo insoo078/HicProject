@@ -1,4 +1,5 @@
 var HicHistogram = function( config ) {
+	this.threshold = 0;
     this.config = JSON.parse( JSON.stringify(config) );
 
     var div = $("#graph");
@@ -87,6 +88,55 @@ HicHistogram.prototype.draw = function( data ) {
 		.attr('x2', PADDING)
 		.attr('y2', yScale(i));
 	}
+	
+	var obj = this;
+	
+	obj.threshold = data.peakValue;
+
+	var drag = d3.behavior.drag()
+	.on("drag", function(d) {
+		var av = d3.event.dy;
+		
+		var value = yScale( obj.threshold );
+		
+		obj.threshold = yScale.invert( value + av );
+
+		$("#threshold-bar").attr('y1', value);
+		$("#threshold-bar").attr('y2', value);
+	});
+
+//	canvas.on("click", function() {
+//		if (d3.event.defaultPrevented) return; // click suppressed
+//
+//		var value = d3.mouse(this)[1];
+//		obj.threshold = yScale.invert( value );
+//
+//		$("#threshold-bar").attr('y1', value);
+//		$("#threshold-bar").attr('y2', value);
+//	});
+
+	canvas.on('mousedown', function(){
+		if (d3.event.defaultPrevented) return; // click suppressed
+
+		var value = d3.mouse(this)[1];
+		obj.threshold = yScale.invert( value );
+
+		$("#threshold-bar").attr('y1', value);
+		$("#threshold-bar").attr('y2', value);
+	});
+	
+	canvas.append('g')
+	.attr('id', 'threashold-bar-group')
+	.append('line')
+	.attr('id', 'threshold-bar')
+	.attr('class', 'threshold-bar')
+	.attr('x1', PADDING)
+	.attr('y1', yScale(data.peakValue))
+	.attr('x2', WIDTH - PADDING)
+	.attr('y2', yScale(data.peakValue))
+	;
+	
+	canvas.call(drag);
 }
 
 
