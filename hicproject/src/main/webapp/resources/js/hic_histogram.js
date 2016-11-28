@@ -10,6 +10,85 @@ var HicHistogram = function( config ) {
     ;
 };
 
+HicHistogram.prototype.draw = function( data ) {
+    var HEIGHT = $("#canvas").height();
+    var WIDTH = $("#canvas").width();
+    var PADDING = 100;
+
+	var yScale = d3.scale.linear()
+	.domain( [0, data.peakValue] )
+	.range([HEIGHT - (PADDING), PADDING + 50]);
+
+	var xScale = d3.scale.linear()
+	.domain( [data.startPt, data.endPt] )
+	.range([PADDING, (WIDTH-PADDING)]);
+
+	var canvas = d3.select("#canvas");
+
+	canvas.append("g")
+	.append("rect")
+	.attr('id', 'peakBaseRect')
+	.attr('class', 'boundary')
+	.attr('x', PADDING)
+	.attr('y', PADDING)
+	.attr('width', WIDTH - (2*PADDING))
+	.attr('height', HEIGHT - (2*PADDING))
+	;
+
+	canvas.append('g')
+	.append('line')
+	.attr('class', 'bait')
+	.attr('x1', xScale(data.bait))
+	.attr('y1', PADDING)
+	.attr('x2', xScale(data.bait))
+	.attr('y2', HEIGHT - PADDING)
+	;
+
+	canvas.append('g')
+	.selectAll('circle')
+	.data(data.interactionPairs)
+	.enter()
+	.append('circle')
+	.attr('cx', function(d, i) {
+		return xScale(d.bin2);
+	})
+	.attr('cy', function(d, i){
+		return yScale(d.count);
+	})
+	.attr('r', 2);
+	
+//	var yAxis = d3.svg.axis()
+//	.orient('left')
+//	.scale(yScale)
+//	;
+//
+//	var xAxis = d3.svg.axis()
+//	.orient('bottom')
+//	.scale(xScale)
+//	;
+//
+//	canvas.append('g')
+//	.attr('class', 'axis')
+//	.attr('transform', 'translate(' + (PADDING) + ', 0)')
+//	.call(yAxis);
+//
+//	canvas.append('g')
+//	.attr('class', 'axis')
+//	.attr("transform", "translate(0, " + (HEIGHT-PADDING) + ")")
+//	.call(xAxis);
+//	
+//	var line = d3.svg.line()
+//    .x(function(d) { return xScale(d.bin2); })
+//    .y(function(d) { return yScale(d.count); });
+//
+//	canvas.append("line")
+//      .data([data.interactionPairs])
+//      .attr("class", "line")
+//	.attr("d", line);
+	
+	console.log(data);
+}
+
 
 HicHistogram.prototype.init = function( ) {
 	var obj = this;
@@ -84,116 +163,21 @@ HicHistogram.prototype.checkHowManyGenesAreThere = function( param ) {
 }
 
 HicHistogram.prototype.findInteractionsAboutBait = function( loci, boundary_range, window_size ) {
-    var HEIGHT = $("#canvas").height();
-    var WIDTH = $("#canvas").width();
-    var PADDING = 100;
-	
+	var obj = this;
+
 	$.ajax({
 		type: 'post',
 		url: 'get_data',
 		data: {loci:loci, boundary_range:boundary_range, window_size:window_size},
 		dataType: 'json',
 		success:function(data) {
-			var yScale = d3.scale.linear()
-			.domain( [0, data.peakValue] )
-			.range([HEIGHT - (PADDING), PADDING]);
+			
+			obj.draw(data);
 
-			var xScale = d3.scale.linear()
-			.domain( [data.startPt, data.endPt] )
-			.range([PADDING, (WIDTH-PADDING)]);
-			
-			var yAxis = d3.svg.axis()
-			.orient('left')
-			.scale(yScale)
-			;
-
-			var xAxis = d3.svg.axis()
-			.orient('bottom')
-			.scale(xScale)
-			;
-	
-			var canvas = d3.select("#canvas");
-	
-			canvas.append('g')
-			.attr('class', 'axis')
-			.attr('transform', 'translate(' + (PADDING) + ', 0)')
-			.call(yAxis);
-	
-			canvas.append('g')
-			.attr('class', 'axis')
-			.attr("transform", "translate(0, " + (HEIGHT-PADDING) + ")")
-			.call(xAxis);
-			
-			
-			var line = d3.svg.line()
-		    .x(function(d) { return xScale(d.bin2); })
-		    .y(function(d) { return yScale(d.count); });
-	
-			canvas.append("line")
-		      .data([data.interactionPairs])
-		      .attr("class", "line")
-			.attr("d", line);
-			
 			console.log(data);
 		}
 	});
 }
-
-
-HicHistogram.prototype.getData = function() {
-//	$.ajax({
-//	type: 'post',
-//	url: 'get_data',
-//	dataType: 'json',
-//	success:function(data) {
-//	    var HEIGHT = $("#canvas").height();
-//	    var WIDTH = $("#canvas").width();
-//	    var PADDING = 100;
-//
-//		var yScale = d3.scale.linear()
-//		.domain( [0, data.maxFreq] )
-//		.range([HEIGHT - (PADDING), PADDING]);
-//
-//		
-//		
-//		var xScale = d3.scale.linear()
-//		.domain( [data.startPt, data.endPt] )
-//		.range([PADDING, (WIDTH-PADDING)]);
-//		
-//		var yAxis = d3.svg.axis()
-//		.orient('left')
-//		.scale(yScale)
-//		;
-//
-//		var xAxis = d3.svg.axis()
-//		.orient('bottom')
-//		.scale(xScale)
-//		;
-//
-//		var canvas = d3.select("#canvas");
-//
-//		canvas.append('g')
-//		.attr('class', 'axis')
-//		.attr('transform', 'translate(' + (PADDING) + ', 0)')
-//		.call(yAxis);
-//
-//		canvas.append('g')
-//		.attr('class', 'axis')
-//		.attr("transform", "translate(0, " + (HEIGHT-PADDING) + ")")
-//		.call(xAxis);
-//		
-//		
-//		var line = d3.svg.line()
-//	    .x(function(d) { return xScale(d.bin); })
-//	    .y(function(d) { return yScale(d.count); });
-//
-//		canvas.append("path")
-//	      .data([data.pairList])
-//	      .attr("class", "line")
-//		.attr("d", line);
-//	}
-//});
-};
 
 $(document).ready(function () {
 	var config = {

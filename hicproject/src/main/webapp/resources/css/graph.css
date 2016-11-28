@@ -10,3 +10,14 @@
   stroke: #d3f;
   stroke-width: 1px;
 }
+
+.boundary{
+	fill:none;
+	stroke: darkgray;
+  	stroke-width: 1px;
+}
+
+.bait{
+	stroke-width:1px;
+	stroke:red;
+}
